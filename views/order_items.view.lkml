@@ -65,6 +65,7 @@ view: order_items {
   dimension: sale_price {
     type: number
     sql: ${TABLE}."SALE_PRICE" ;;
+    value_format_name: usd
   }
 
   dimension_group: shipped {
@@ -92,7 +93,7 @@ view: order_items {
     sql: ${TABLE}."USER_ID" ;;
   }
 
-  measure: total_items_sold {
+  measure: number_of_items_sold {
     type: count
     drill_fields: [detail*]
   }
@@ -117,6 +118,7 @@ view: order_items {
 
   measure: total_gross_revenue{
     type:  sum
+    description: "Total revenue from completed sales (cancelled and returned orders excluded)"
     filters: [status: "Complete"]
     sql: ${sale_price};;
     value_format_name: usd
@@ -129,7 +131,8 @@ view: order_items {
 
   measure: item_return_rate {
     type: number
-    sql: 1.00 * ${number_of_items_returned} / ${total_items_sold};;
+    description: "Number of Items Returned / total number of items sold"
+    sql: 1.00 * ${number_of_items_returned} / ${number_of_items_sold};;
     value_format_name: percent_2
   }
 
@@ -150,22 +153,27 @@ view: order_items {
     value_format_name: percent_2
   }
 
-  dimension: gross_margin {
-    type: number
-    sql: ${sale_price} - ${inventory_items.cost} ;;
-    value_format_name: usd
-  }
-
   measure: total_gross_margin {
-    type: sum
-    sql: ${gross_margin} ;;
+    type: number
+    description: "Total difference between the total revenue from completed sales and
+    the cost of the goods that were sold"
+    sql: ${total_gross_revenue} - ${inventory_items.total_cost} ;;
     value_format_name: usd
   }
 
   measure: average_gross_margin {
-    type: average
-    sql: ${gross_margin} ;;
+    type: number
+    description: "Average difference between the total revenue from completed sales and
+                  the cost of the goods that were sold"
+    sql: ${total_gross_margin} / ${number_of_items_sold} ;;
     value_format_name: usd
+  }
+
+  measure: gross_margin_percent {
+    type: number
+    description: "Total Gross Margin Amount / Total Gross Revenue"
+    sql: 1.00 * ${total_gross_margin} / nullifzero(${total_gross_revenue}) ;;
+    value_format_name: percent_2
   }
 
   # ----- Sets of fields for drilling ------
