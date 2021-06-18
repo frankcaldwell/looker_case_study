@@ -71,3 +71,5 @@ explore: products {
 }
 
 explore: users {}
+
+explore: customer_behavior {}

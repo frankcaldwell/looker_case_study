@@ -43,6 +43,12 @@ view: order_items {
     sql: ${TABLE}."INVENTORY_ITEM_ID" ;;
   }
 
+  dimension: created_at {
+    type: date
+    hidden: yes
+    sql: ${TABLE}."created_at" ;;
+  }
+
   dimension: order_id {
     type: number
     sql: ${TABLE}."ORDER_ID" ;;
