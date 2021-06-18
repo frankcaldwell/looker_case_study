@@ -5,10 +5,12 @@ view: customer_behavior {
             , COUNT(DISTINCT order_items.order_id) as lifetime_orders
             , MIN(order_items.created_at) as first_order
             , MAX(order_items.created_at) as latest_order
+            , MIN(users.created_at) as sign_up_date
             , SUM(case when order_items.status in ('Returned','Cancelled')
                        then 0
                       else order_items.sale_price end) as lifetime_revenue
           FROM order_items
+          join users on order_items.user_id = users.id
           GROUP BY order_items.user_id ;;
     }
 
@@ -62,6 +64,17 @@ view: customer_behavior {
     type: yesno
     sql: ${lifetime_orders} > 1 ;;
   }
+  dimension: sign_up_date {
+    type: date
+    convert_tz: no
+    sql: ${TABLE}.sign_up_date ;;
+  }
+  dimension_group: since_signup {
+    type: duration
+    intervals: [day,month]
+    sql_start: ${sign_up_date} ;;
+    sql_end: CURRENT_DATE();;
+  }
   measure: customer_count {
     type: count_distinct
     sql: ${user_id} ;;
@@ -87,6 +100,14 @@ view: customer_behavior {
   measure: average_days_since_last_order {
     type: average
     sql: ${days_since_last_order} ;;
+  }
+  measure: average_days_since_signup {
+    type: average
+    sql: ${days_since_signup} ;;
+  }
+  measure: average_months_since_signup {
+    type: average
+    sql: %${months_since_signup} ;;
   }
 
 }

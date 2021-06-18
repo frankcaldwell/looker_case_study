@@ -40,6 +40,12 @@ view: users {
     sql: ${TABLE}."CREATED_AT" ;;
   }
 
+  dimension: created_at {
+    type: date
+    convert_tz: no
+    sql: ${TABLE}.created_at ;;
+  }
+
   dimension: email {
     type: string
     sql: ${TABLE}."EMAIL" ;;
