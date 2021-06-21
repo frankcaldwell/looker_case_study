@@ -24,5 +24,8 @@ view: order_patterns {
     type: number
     sql: ${TABLE}.order_sequence ;;
   }
-
+  dimension: days_between_orders {
+    type:  number
+    sql: diff_days(${created_at},offset(${created_at},1)) ;;
+  }
 }
