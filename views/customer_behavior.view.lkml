@@ -10,7 +10,7 @@ view: customer_behavior {
                        then 0
                       else order_items.sale_price end) as lifetime_revenue
           FROM order_items
-          join users on order_items.user_id = users.id
+          left join users on order_items.user_id = users.id
           GROUP BY order_items.user_id ;;
     }
 
@@ -107,7 +107,7 @@ view: customer_behavior {
   }
   measure: average_months_since_signup {
     type: average
-    sql: %${months_since_signup} ;;
+    sql: ${months_since_signup} ;;
   }
 
 }
