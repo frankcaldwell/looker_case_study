@@ -75,3 +75,5 @@ explore: users {}
 explore: customer_behavior {}
 
 explore: order_patterns {}
+
+explore: dt_order_facts {}
