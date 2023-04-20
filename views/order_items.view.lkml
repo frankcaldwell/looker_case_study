@@ -46,7 +46,7 @@ view: order_items {
   dimension: created_at {
     type: date
     hidden: yes
-    sql: ${TABLE}."created_at" ;;
+    sql: ${TABLE}."CREATED_AT" ;;
   }
 
   dimension: order_id {
@@ -270,6 +270,12 @@ view: order_items {
   measure: percent_of_total_revenue {
     type: percent_of_total
     sql: ${total_gross_revenue} ;;
+  }
+
+  measure: first_purchase {
+    type: date
+    sql: min(${created_at}) ;;
+
   }
 
   # ----- Sets of fields for drilling ------

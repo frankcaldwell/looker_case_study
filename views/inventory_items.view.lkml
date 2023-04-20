@@ -103,4 +103,10 @@ view: inventory_items {
     value_format_name: usd
   }
 
+  measure: first_purchase {
+    type: date
+    sql: min(${created_date}) ;;
+
+  }
+
 }
