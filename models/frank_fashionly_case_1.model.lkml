@@ -1,4 +1,4 @@
-connection: "snowlooker"
+connection: "looker_partner_demo"
 
 # include all the views
 include: "/views/**/*.view"
